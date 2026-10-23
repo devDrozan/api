@@ -1,0 +1,1036 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ထွယ်ဂျီဂွမ်Caculator API",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {}
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/v1/rules": {
+      "get": {
+        "operationId": "getRules",
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "rulesVersion",
+                    "verifiedOn",
+                    "methods",
+                    "currency",
+                    "rounding",
+                    "sources"
+                  ],
+                  "properties": {
+                    "rulesVersion": {
+                      "type": "string"
+                    },
+                    "verifiedOn": {
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                      "description": "Korean calendar date, YYYY-MM-DD",
+                      "type": "string"
+                    },
+                    "methods": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "normal"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "db"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "dc"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "currency": {
+                      "type": "string",
+                      "enum": [
+                        "KRW"
+                      ]
+                    },
+                    "rounding": {
+                      "type": "string"
+                    },
+                    "sources": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "title",
+                          "url"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calculations/context": {
+      "post": {
+        "operationId": "getCalculationContext",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "method",
+                  "employment"
+                ],
+                "properties": {
+                  "method": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "normal"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "db"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "dc"
+                        ]
+                      }
+                    ]
+                  },
+                  "employment": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "required": [
+                      "startDate",
+                      "lastWorkingDate",
+                      "weeklyHours",
+                      "hasSpecialCircumstances"
+                    ],
+                    "properties": {
+                      "startDate": {
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                        "description": "Korean calendar date, YYYY-MM-DD",
+                        "type": "string"
+                      },
+                      "lastWorkingDate": {
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                        "description": "Korean calendar date, YYYY-MM-DD",
+                        "type": "string"
+                      },
+                      "weeklyHours": {
+                        "minimum": 0,
+                        "maximum": 168,
+                        "type": "number"
+                      },
+                      "hasSpecialCircumstances": {
+                        "description": "Leave adjustments, prior settlements, scheme changes, or variable hours",
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "method",
+                    "retirementDate",
+                    "employmentDays",
+                    "lookbackStart",
+                    "lookbackDays",
+                    "eligibility",
+                    "wagePeriods",
+                    "dcPeriods"
+                  ],
+                  "properties": {
+                    "method": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "normal"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "db"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "dc"
+                          ]
+                        }
+                      ]
+                    },
+                    "retirementDate": {
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                      "description": "Korean calendar date, YYYY-MM-DD",
+                      "type": "string"
+                    },
+                    "employmentDays": {
+                      "type": "integer"
+                    },
+                    "lookbackStart": {
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                      "description": "Korean calendar date, YYYY-MM-DD",
+                      "type": "string"
+                    },
+                    "lookbackDays": {
+                      "type": "integer"
+                    },
+                    "eligibility": {
+                      "type": "object",
+                      "required": [
+                        "status",
+                        "reasons"
+                      ],
+                      "properties": {
+                        "status": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "eligible"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "ineligible"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "review_required"
+                              ]
+                            }
+                          ]
+                        },
+                        "reasons": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "wagePeriods": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "startDate",
+                          "endDate",
+                          "days"
+                        ],
+                        "properties": {
+                          "startDate": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          },
+                          "endDate": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          },
+                          "days": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "dcPeriods": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "year",
+                          "startDate",
+                          "endDate"
+                        ],
+                        "properties": {
+                          "year": {
+                            "type": "integer"
+                          },
+                          "startDate": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          },
+                          "endDate": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calculations": {
+      "post": {
+        "operationId": "calculate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "required": [
+                      "method",
+                      "employment"
+                    ],
+                    "properties": {
+                      "method": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "normal"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "db"
+                            ]
+                          }
+                        ]
+                      },
+                      "employment": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "startDate",
+                          "lastWorkingDate",
+                          "weeklyHours",
+                          "hasSpecialCircumstances"
+                        ],
+                        "properties": {
+                          "startDate": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          },
+                          "lastWorkingDate": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          },
+                          "weeklyHours": {
+                            "minimum": 0,
+                            "maximum": 168,
+                            "type": "number"
+                          },
+                          "hasSpecialCircumstances": {
+                            "description": "Leave adjustments, prior settlements, scheme changes, or variable hours",
+                            "type": "boolean"
+                          }
+                        }
+                      },
+                      "wages": {
+                        "maxItems": 4,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "startDate",
+                            "endDate",
+                            "basePay",
+                            "allowances"
+                          ],
+                          "properties": {
+                            "startDate": {
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                              "description": "Korean calendar date, YYYY-MM-DD",
+                              "type": "string"
+                            },
+                            "endDate": {
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                              "description": "Korean calendar date, YYYY-MM-DD",
+                              "type": "string"
+                            },
+                            "basePay": {
+                              "pattern": "^(0|[1-9]\\d{0,14})(\\.\\d{1,6})?$",
+                              "description": "Non-negative KRW decimal string",
+                              "type": "string"
+                            },
+                            "allowances": {
+                              "pattern": "^(0|[1-9]\\d{0,14})(\\.\\d{1,6})?$",
+                              "description": "Non-negative KRW decimal string",
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "annualBonus": {
+                        "pattern": "^(0|[1-9]\\d{0,14})(\\.\\d{1,6})?$",
+                        "description": "Non-negative KRW decimal string",
+                        "type": "string"
+                      },
+                      "annualLeavePay": {
+                        "pattern": "^(0|[1-9]\\d{0,14})(\\.\\d{1,6})?$",
+                        "description": "Non-negative KRW decimal string",
+                        "type": "string"
+                      },
+                      "ordinaryDailyWage": {
+                        "pattern": "^(0|[1-9]\\d{0,14})(\\.\\d{1,6})?$",
+                        "description": "Non-negative KRW decimal string",
+                        "type": "string",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "required": [
+                      "method",
+                      "employment"
+                    ],
+                    "properties": {
+                      "method": {
+                        "type": "string",
+                        "enum": [
+                          "dc"
+                        ]
+                      },
+                      "employment": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "startDate",
+                          "lastWorkingDate",
+                          "weeklyHours",
+                          "hasSpecialCircumstances"
+                        ],
+                        "properties": {
+                          "startDate": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          },
+                          "lastWorkingDate": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          },
+                          "weeklyHours": {
+                            "minimum": 0,
+                            "maximum": 168,
+                            "type": "number"
+                          },
+                          "hasSpecialCircumstances": {
+                            "description": "Leave adjustments, prior settlements, scheme changes, or variable hours",
+                            "type": "boolean"
+                          }
+                        }
+                      },
+                      "dcWages": {
+                        "maxItems": 51,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "year",
+                            "wages"
+                          ],
+                          "properties": {
+                            "year": {
+                              "minimum": 1900,
+                              "maximum": 2100,
+                              "type": "integer"
+                            },
+                            "wages": {
+                              "pattern": "^(0|[1-9]\\d{0,14})(\\.\\d{1,6})?$",
+                              "description": "Non-negative KRW decimal string",
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "reportedBalance": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "amount",
+                          "asOf"
+                        ],
+                        "properties": {
+                          "amount": {
+                            "pattern": "^(0|[1-9]\\d{0,14})(\\.\\d{1,6})?$",
+                            "description": "Non-negative KRW decimal string",
+                            "type": "string"
+                          },
+                          "asOf": {
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                            "description": "Korean calendar date, YYYY-MM-DD",
+                            "type": "string"
+                          }
+                        },
+                        "nullable": true
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "method",
+                    "status",
+                    "context",
+                    "rulesVersion",
+                    "verifiedOn",
+                    "sources",
+                    "warnings",
+                    "rounding"
+                  ],
+                  "properties": {
+                    "method": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "normal"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "db"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "dc"
+                          ]
+                        }
+                      ]
+                    },
+                    "status": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "eligible"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "ineligible"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "review_required"
+                          ]
+                        }
+                      ]
+                    },
+                    "context": {
+                      "type": "object",
+                      "required": [
+                        "method",
+                        "retirementDate",
+                        "employmentDays",
+                        "lookbackStart",
+                        "lookbackDays",
+                        "eligibility",
+                        "wagePeriods",
+                        "dcPeriods"
+                      ],
+                      "properties": {
+                        "method": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "normal"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "db"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "dc"
+                              ]
+                            }
+                          ]
+                        },
+                        "retirementDate": {
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                          "description": "Korean calendar date, YYYY-MM-DD",
+                          "type": "string"
+                        },
+                        "employmentDays": {
+                          "type": "integer"
+                        },
+                        "lookbackStart": {
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                          "description": "Korean calendar date, YYYY-MM-DD",
+                          "type": "string"
+                        },
+                        "lookbackDays": {
+                          "type": "integer"
+                        },
+                        "eligibility": {
+                          "type": "object",
+                          "required": [
+                            "status",
+                            "reasons"
+                          ],
+                          "properties": {
+                            "status": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "eligible"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "ineligible"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "review_required"
+                                  ]
+                                }
+                              ]
+                            },
+                            "reasons": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "wagePeriods": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "startDate",
+                              "endDate",
+                              "days"
+                            ],
+                            "properties": {
+                              "startDate": {
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                                "description": "Korean calendar date, YYYY-MM-DD",
+                                "type": "string"
+                              },
+                              "endDate": {
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                                "description": "Korean calendar date, YYYY-MM-DD",
+                                "type": "string"
+                              },
+                              "days": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        },
+                        "dcPeriods": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "year",
+                              "startDate",
+                              "endDate"
+                            ],
+                            "properties": {
+                              "year": {
+                                "type": "integer"
+                              },
+                              "startDate": {
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                                "description": "Korean calendar date, YYYY-MM-DD",
+                                "type": "string"
+                              },
+                              "endDate": {
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                                "description": "Korean calendar date, YYYY-MM-DD",
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "rulesVersion": {
+                      "type": "string"
+                    },
+                    "verifiedOn": {
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                      "description": "Korean calendar date, YYYY-MM-DD",
+                      "type": "string"
+                    },
+                    "sources": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "title",
+                          "url"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "warnings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "rounding": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "kind",
+                            "amountKrw",
+                            "rawAmountKrw",
+                            "periodWagesKrw",
+                            "bonusIncludedKrw",
+                            "leaveIncludedKrw",
+                            "referenceWagesKrw",
+                            "averageDailyWageKrw",
+                            "ordinaryDailyWageKrw",
+                            "applicableDailyWageKrw",
+                            "wageBasis",
+                            "provisional"
+                          ],
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "severance"
+                              ]
+                            },
+                            "amountKrw": {
+                              "type": "string"
+                            },
+                            "rawAmountKrw": {
+                              "type": "string"
+                            },
+                            "periodWagesKrw": {
+                              "type": "string"
+                            },
+                            "bonusIncludedKrw": {
+                              "type": "string"
+                            },
+                            "leaveIncludedKrw": {
+                              "type": "string"
+                            },
+                            "referenceWagesKrw": {
+                              "type": "string"
+                            },
+                            "averageDailyWageKrw": {
+                              "type": "string"
+                            },
+                            "ordinaryDailyWageKrw": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "applicableDailyWageKrw": {
+                              "type": "string"
+                            },
+                            "wageBasis": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "average"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "ordinary"
+                                  ]
+                                }
+                              ]
+                            },
+                            "provisional": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "required": [
+                            "kind",
+                            "requiredContributionKrw",
+                            "rawContributionKrw",
+                            "totalWagesKrw",
+                            "years",
+                            "reportedBalance"
+                          ],
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "dc"
+                              ]
+                            },
+                            "requiredContributionKrw": {
+                              "type": "string"
+                            },
+                            "rawContributionKrw": {
+                              "type": "string"
+                            },
+                            "totalWagesKrw": {
+                              "type": "string"
+                            },
+                            "years": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "year",
+                                  "wagesKrw",
+                                  "contributionKrw"
+                                ],
+                                "properties": {
+                                  "year": {
+                                    "type": "integer"
+                                  },
+                                  "wagesKrw": {
+                                    "type": "string"
+                                  },
+                                  "contributionKrw": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "reportedBalance": {
+                              "type": "object",
+                              "required": [
+                                "amount",
+                                "asOf"
+                              ],
+                              "properties": {
+                                "amount": {
+                                  "type": "string"
+                                },
+                                "asOf": {
+                                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                                  "description": "Korean calendar date, YYYY-MM-DD",
+                                  "type": "string"
+                                }
+                              },
+                              "nullable": true
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:3001"
+    }
+  ]
+}
