@@ -57,6 +57,8 @@ export function getContext(input: ContextRequest): CalculationContext {
 
 export function calculate(input: CalculationRequest): CalculationOutput {
   const context = getContext(input);
+  const ordinary = input.method === 'dc' || input.ordinaryDailyWage == null ? null : new D(input.ordinaryDailyWage);
+  if (ordinary !== null && ordinary.lessThanOrEqualTo(0)) issue('ordinaryDailyWage', 'POSITIVE_ORDINARY_WAGE');
   if (input.method === 'dc') {
     if (input.reportedBalance) parseDate(input.reportedBalance.asOf, 'reportedBalance.asOf');
   } else {
@@ -94,11 +96,13 @@ export function calculate(input: CalculationRequest): CalculationOutput {
   const reference = wages.plus(bonus).plus(leave);
   if (reference.isZero()) { output.status = 'review_required'; output.warnings.push('ZERO_WAGES'); return output; }
   const average = reference.div(context.lookbackDays);
-  const ordinary = input.ordinaryDailyWage == null ? null : new D(input.ordinaryDailyWage);
-  if (ordinary !== null && ordinary.lessThanOrEqualTo(0)) issue('ordinaryDailyWage', 'POSITIVE_ORDINARY_WAGE');
-  const useOrdinary = ordinary !== null && ordinary.greaterThan(average);
+  const useOrdinary = ordinary !== null && ordinary.times(context.lookbackDays).greaterThan(reference);
   const daily = useOrdinary ? ordinary! : average;
-  const amount = daily.times(30).times(context.employmentDays).div(365);
+  // Keep the average-wage numerator exact until the final division. Reusing
+  // the recurring daily average can put an exact whole-won result below its boundary.
+  const amount = useOrdinary
+    ? ordinary!.times(30).times(context.employmentDays).div(365)
+    : reference.times(30).times(context.employmentDays).div(new D(context.lookbackDays).times(365));
   output.result = {
     kind: 'severance', amountKrw: amount.toFixed(0, D.ROUND_DOWN), rawAmountKrw: amount.toFixed(12),
     periodWagesKrw: wages.toFixed(), bonusIncludedKrw: bonus.toFixed(), leaveIncludedKrw: leave.toFixed(), referenceWagesKrw: reference.toFixed(),

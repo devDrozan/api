@@ -1,5 +1,5 @@
 export const RULES = {
-  rulesVersion: '2026.10.24.1',
+  rulesVersion: '2026.10.29.1',
   verifiedOn: '2026-10-24',
   methods: ['normal', 'db', 'dc'] as const,
   currency: 'KRW' as const,

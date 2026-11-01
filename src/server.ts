@@ -4,13 +4,15 @@ import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import { calculate, getContext, InputError } from './domain.js';
 import { CalculationInput, CalculationResponse, ContextInput, ContextResponse, ErrorResponse, RulesResponse, type CalculationRequest, type ContextRequest } from './schemas.js';
+import { SalaryInput, SalaryResponse, estimateSalary, type SalaryRequest } from './salary.js';
 import { RULES } from './rules.js';
 
 export async function buildServer() {
-  const server = Fastify({ logger: false, bodyLimit: 32_768, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
+  const trustedProxies = (process.env.TRUSTED_PROXIES ?? '').split(',').map(value => value.trim()).filter(Boolean);
+  const server = Fastify({ logger: false, bodyLimit: 32_768, trustProxy: trustedProxies.length ? trustedProxies : false, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
   const origins = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173,http://127.0.0.1:5173,http://localhost:8081,http://127.0.0.1:8081').split(',').map(v => v.trim()).filter(Boolean);
   await server.register(cors, { origin: origins, methods: ['GET', 'POST'], credentials: false });
-  await server.register(rateLimit, { max: 100, timeWindow: '1 minute', errorResponseBuilder: () => ({ code: 'RATE_LIMITED', message: 'Please try again shortly.', issues: [] }) });
+  await server.register(rateLimit, { max: 100, timeWindow: '1 minute' });
   await server.register(swagger, { openapi: { openapi: '3.0.3', info: { title: 'ထွယ်ဂျီဂွမ်Caculator API', version: '1.0.0' }, servers: [{ url: 'http://127.0.0.1:3001' }] } });
   server.addHook('onSend', async (_request, reply, payload) => {
     reply.header('Cache-Control', 'no-store');
@@ -31,6 +33,7 @@ export async function buildServer() {
   server.get('/v1/rules', { schema: { operationId: 'getRules', response: { 200: RulesResponse } } }, async () => RULES);
   server.post<{ Body: ContextRequest }>('/v1/calculations/context', { schema: { operationId: 'getCalculationContext', body: ContextInput, response: { 200: ContextResponse, 400: ErrorResponse } } }, async request => getContext(request.body));
   server.post<{ Body: CalculationRequest }>('/v1/calculations', { schema: { operationId: 'calculate', body: CalculationInput, response: { 200: CalculationResponse, 400: ErrorResponse } } }, async request => calculate(request.body));
+  server.post<{ Body: SalaryRequest }>('/v1/salary-estimates', { schema: { operationId: 'estimateSalary', body: SalaryInput, response: { 200: SalaryResponse, 400: ErrorResponse } } }, async request => estimateSalary(request.body));
   await server.ready();
   return server;
 }

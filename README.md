@@ -17,6 +17,7 @@ Use Node.js 24. Defaults to `http://127.0.0.1:3001`. Scripts read `.env` when pr
 | `PORT` | `3001` | HTTP listening port |
 | `HOST` | `127.0.0.1` | Listening interface; use `0.0.0.0` for device access or containers |
 | `ALLOWED_ORIGINS` | Local web/Expo origins in `.env.example` | Comma-separated browser origins allowed to access the API |
+| `TRUSTED_PROXIES` | Empty | Comma-separated IP addresses or CIDR ranges of reverse proxies whose forwarded client IPs Fastify may trust |
 
 ## Endpoints
 
@@ -59,6 +60,8 @@ npm start
 - Special adjustments and employment beginning before 2013 require review. A zero reference wage also requires review.
 - Missing ordinary daily wage makes a Normal/DB result provisional. No result is returned for review-required or ineligible cases.
 
+Calculation revision `2026.10.29.1` corrects whole-won boundary rounding by evaluating the full wage fraction before final rounding. It also validates supplied ordinary daily wages before eligibility returns. The official-source verification date is unchanged.
+
 Official references and their verification date are defined in `src/rules.ts`. Tests include the [MOEL worked example](https://moel.go.kr/retirementpayCal.do), calendar boundaries, ordinary-wage selection, DC partial years, invalid requests, and response caching behavior. Production launch still needs independent labor-rule review.
 
 ## Container
@@ -68,4 +71,8 @@ docker build -t e9-severance-api .
 docker run --rm -p 3001:3001 -e ALLOWED_ORIGINS=https://your-web-origin.example e9-severance-api
 ```
 
-Use HTTPS at the deployment boundary, set the exact browser origins, and configure proxy/IP handling for the chosen host before relying on IP rate limiting behind a proxy. No deployment service is provisioned by this repository.
+Use HTTPS at the deployment boundary and set the exact browser origins. When a reverse proxy fronts the API, set `TRUSTED_PROXIES` to that proxy's IP address or CIDR range so rate limits apply per client. Keep the API origin unreachable directly from the internet. Do not set `TRUSTED_PROXIES` to all addresses: an untrusted caller could then spoof forwarded IP headers and evade rate limits. No deployment service is provisioned by this repository.
+
+## Salary estimate from work time
+
+`POST /v1/salary-estimates` estimates gross KRW from a selected month, decimal-string pay settings, and unique daily normal/overtime/night hour records. The full basic salary covers normal weekday hours; weekday overtime and full weekend rates add pay, with an overlapping extra night premium. The normal rate is reference-only. These user-entered rates do not implement statutory payroll, deductions, or proration. Responses include categorized hours, components, formula version and final whole-won rounding. No records are stored server-side; request/response caching and payload logging remain disabled. See the exported OpenAPI contract for bounded inputs and structured errors.
