@@ -1270,6 +1270,1716 @@
           }
         }
       }
+    },
+    "/v1/exchange-rates/krw-mmk": {
+      "get": {
+        "operationId": "getKrwMmkRate",
+        "parameters": [
+          {
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "true"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "false"
+                  ]
+                }
+              ]
+            },
+            "in": "query",
+            "name": "refresh",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "quoteId",
+                    "provider",
+                    "sourceName",
+                    "sourceUrl",
+                    "rateType",
+                    "publicationDate",
+                    "publishedAt",
+                    "publicationPrecision",
+                    "retrievedAt",
+                    "expiresAt",
+                    "freshness",
+                    "krwPerQuotedUnit",
+                    "mmkUnit",
+                    "mmkPerKrw",
+                    "krwPerMmk",
+                    "rateDisplayDecimalPlaces"
+                  ],
+                  "properties": {
+                    "quoteId": {
+                      "type": "string"
+                    },
+                    "provider": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "kb"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "kmb"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "hana"
+                          ]
+                        }
+                      ]
+                    },
+                    "sourceName": {
+                      "type": "string"
+                    },
+                    "sourceUrl": {
+                      "type": "string"
+                    },
+                    "rateType": {
+                      "type": "string",
+                      "enum": [
+                        "REFERENCE"
+                      ]
+                    },
+                    "publicationDate": {
+                      "type": "string"
+                    },
+                    "publishedAt": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "publicationPrecision": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "DATE"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "SECOND"
+                          ]
+                        }
+                      ]
+                    },
+                    "retrievedAt": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    },
+                    "freshness": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "PUBLISHED_TODAY"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "PREVIOUS_PUBLISHED_RATE"
+                          ]
+                        }
+                      ]
+                    },
+                    "krwPerQuotedUnit": {
+                      "type": "string"
+                    },
+                    "mmkUnit": {
+                      "type": "string"
+                    },
+                    "mmkPerKrw": {
+                      "type": "string"
+                    },
+                    "krwPerMmk": {
+                      "type": "string"
+                    },
+                    "rateDisplayDecimalPlaces": {
+                      "type": "number",
+                      "enum": [
+                        12
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/currency-conversions": {
+      "post": {
+        "operationId": "convertCurrency",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "from",
+                  "to",
+                  "amount"
+                ],
+                "properties": {
+                  "from": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "KRW"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "MMK"
+                        ]
+                      }
+                    ]
+                  },
+                  "to": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "KRW"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "MMK"
+                        ]
+                      }
+                    ]
+                  },
+                  "amount": {
+                    "maxLength": 18,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "from",
+                    "to",
+                    "amount",
+                    "convertedAmount",
+                    "belowDisplayPrecision",
+                    "quote",
+                    "calculationVersion",
+                    "calculationPrecision",
+                    "rounding",
+                    "decimalPlaces"
+                  ],
+                  "properties": {
+                    "from": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "KRW"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "MMK"
+                          ]
+                        }
+                      ]
+                    },
+                    "to": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "KRW"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "MMK"
+                          ]
+                        }
+                      ]
+                    },
+                    "amount": {
+                      "type": "string"
+                    },
+                    "convertedAmount": {
+                      "type": "string"
+                    },
+                    "belowDisplayPrecision": {
+                      "type": "boolean"
+                    },
+                    "quote": {
+                      "type": "object",
+                      "required": [
+                        "quoteId",
+                        "provider",
+                        "sourceName",
+                        "sourceUrl",
+                        "rateType",
+                        "publicationDate",
+                        "publishedAt",
+                        "publicationPrecision",
+                        "retrievedAt",
+                        "expiresAt",
+                        "freshness",
+                        "krwPerQuotedUnit",
+                        "mmkUnit",
+                        "mmkPerKrw",
+                        "krwPerMmk",
+                        "rateDisplayDecimalPlaces"
+                      ],
+                      "properties": {
+                        "quoteId": {
+                          "type": "string"
+                        },
+                        "provider": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "kb"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "kmb"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "hana"
+                              ]
+                            }
+                          ]
+                        },
+                        "sourceName": {
+                          "type": "string"
+                        },
+                        "sourceUrl": {
+                          "type": "string"
+                        },
+                        "rateType": {
+                          "type": "string",
+                          "enum": [
+                            "REFERENCE"
+                          ]
+                        },
+                        "publicationDate": {
+                          "type": "string"
+                        },
+                        "publishedAt": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "publicationPrecision": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "DATE"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "SECOND"
+                              ]
+                            }
+                          ]
+                        },
+                        "retrievedAt": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string"
+                        },
+                        "freshness": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "PUBLISHED_TODAY"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "PREVIOUS_PUBLISHED_RATE"
+                              ]
+                            }
+                          ]
+                        },
+                        "krwPerQuotedUnit": {
+                          "type": "string"
+                        },
+                        "mmkUnit": {
+                          "type": "string"
+                        },
+                        "mmkPerKrw": {
+                          "type": "string"
+                        },
+                        "krwPerMmk": {
+                          "type": "string"
+                        },
+                        "rateDisplayDecimalPlaces": {
+                          "type": "number",
+                          "enum": [
+                            12
+                          ]
+                        }
+                      }
+                    },
+                    "calculationVersion": {
+                      "type": "string",
+                      "enum": [
+                        "krw-mmk-reference-1"
+                      ]
+                    },
+                    "calculationPrecision": {
+                      "type": "number",
+                      "enum": [
+                        80
+                      ]
+                    },
+                    "rounding": {
+                      "type": "string",
+                      "enum": [
+                        "FLOOR_ONCE"
+                      ]
+                    },
+                    "decimalPlaces": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "enum": [
+                            0
+                          ]
+                        },
+                        {
+                          "type": "number",
+                          "enum": [
+                            2
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/currency-conversions/hundi": {
+      "post": {
+        "operationId": "convertCurrencyHundi",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "from",
+                  "to",
+                  "amount",
+                  "mmkPerUsd",
+                  "usdPerKrw"
+                ],
+                "properties": {
+                  "from": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "KRW"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "MMK"
+                        ]
+                      }
+                    ]
+                  },
+                  "to": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "KRW"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "MMK"
+                        ]
+                      }
+                    ]
+                  },
+                  "amount": {
+                    "maxLength": 18,
+                    "type": "string"
+                  },
+                  "mmkPerUsd": {
+                    "maxLength": 18,
+                    "type": "string"
+                  },
+                  "usdPerKrw": {
+                    "maxLength": 18,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "from",
+                    "to",
+                    "amount",
+                    "convertedAmount",
+                    "belowDisplayPrecision",
+                    "rates",
+                    "calculationVersion",
+                    "calculationPrecision",
+                    "rounding",
+                    "decimalPlaces"
+                  ],
+                  "properties": {
+                    "from": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "KRW"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "MMK"
+                          ]
+                        }
+                      ]
+                    },
+                    "to": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "KRW"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "MMK"
+                          ]
+                        }
+                      ]
+                    },
+                    "amount": {
+                      "type": "string"
+                    },
+                    "convertedAmount": {
+                      "type": "string"
+                    },
+                    "belowDisplayPrecision": {
+                      "type": "boolean"
+                    },
+                    "rates": {
+                      "type": "object",
+                      "required": [
+                        "mmkPerUsd",
+                        "usdPerKrw",
+                        "mmkPerKrw"
+                      ],
+                      "properties": {
+                        "mmkPerUsd": {
+                          "type": "string"
+                        },
+                        "usdPerKrw": {
+                          "type": "string"
+                        },
+                        "mmkPerKrw": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "calculationVersion": {
+                      "type": "string",
+                      "enum": [
+                        "krw-mmk-hundi-1"
+                      ]
+                    },
+                    "calculationPrecision": {
+                      "type": "number",
+                      "enum": [
+                        80
+                      ]
+                    },
+                    "rounding": {
+                      "type": "string",
+                      "enum": [
+                        "FLOOR_ONCE"
+                      ]
+                    },
+                    "decimalPlaces": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "enum": [
+                            0
+                          ]
+                        },
+                        {
+                          "type": "number",
+                          "enum": [
+                            2
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/exchange-rates/krw-mmk/cbm": {
+      "get": {
+        "operationId": "getCbmKrwMmkRate",
+        "parameters": [
+          {
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "true"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "false"
+                  ]
+                }
+              ]
+            },
+            "in": "query",
+            "name": "refresh",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "quoteId",
+                    "provider",
+                    "sourceName",
+                    "sourceUrl",
+                    "rateType",
+                    "sourceTimeZone",
+                    "publicationDate",
+                    "publishedAt",
+                    "publicationPrecision",
+                    "retrievedAt",
+                    "expiresAt",
+                    "freshness",
+                    "quotedKrw",
+                    "mmkPer100Krw",
+                    "mmkPerKrw",
+                    "referenceMmkPer100Krw",
+                    "referenceMmkPerKrw",
+                    "referenceSourceUrl",
+                    "krwPerQuotedUnit",
+                    "mmkUnit",
+                    "krwPerMmk",
+                    "rateDisplayDecimalPlaces"
+                  ],
+                  "properties": {
+                    "quoteId": {
+                      "type": "string"
+                    },
+                    "provider": {
+                      "type": "string",
+                      "enum": [
+                        "cbm"
+                      ]
+                    },
+                    "sourceName": {
+                      "type": "string"
+                    },
+                    "sourceUrl": {
+                      "type": "string"
+                    },
+                    "rateType": {
+                      "type": "string",
+                      "enum": [
+                        "MARKET_TRADING"
+                      ]
+                    },
+                    "sourceTimeZone": {
+                      "type": "string",
+                      "enum": [
+                        "Asia/Yangon"
+                      ]
+                    },
+                    "publicationDate": {
+                      "type": "string"
+                    },
+                    "publishedAt": {
+                      "type": "object",
+                      "nullable": true,
+                      "enum": [
+                        null
+                      ]
+                    },
+                    "publicationPrecision": {
+                      "type": "string",
+                      "enum": [
+                        "DATE"
+                      ]
+                    },
+                    "retrievedAt": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    },
+                    "freshness": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "PUBLISHED_TODAY"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "PREVIOUS_PUBLISHED_RATE"
+                          ]
+                        }
+                      ]
+                    },
+                    "quotedKrw": {
+                      "type": "string",
+                      "enum": [
+                        "100"
+                      ]
+                    },
+                    "mmkPer100Krw": {
+                      "type": "string"
+                    },
+                    "mmkPerKrw": {
+                      "type": "string"
+                    },
+                    "referenceMmkPer100Krw": {
+                      "type": "string"
+                    },
+                    "referenceMmkPerKrw": {
+                      "type": "string"
+                    },
+                    "referenceSourceUrl": {
+                      "type": "string"
+                    },
+                    "krwPerQuotedUnit": {
+                      "type": "string",
+                      "enum": [
+                        "100"
+                      ]
+                    },
+                    "mmkUnit": {
+                      "type": "string"
+                    },
+                    "krwPerMmk": {
+                      "type": "string"
+                    },
+                    "rateDisplayDecimalPlaces": {
+                      "type": "number",
+                      "enum": [
+                        14
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/currency-conversions/cbm": {
+      "post": {
+        "operationId": "convertCurrencyCbm",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "from",
+                  "to",
+                  "amount"
+                ],
+                "properties": {
+                  "from": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "KRW"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "MMK"
+                        ]
+                      }
+                    ]
+                  },
+                  "to": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "KRW"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "MMK"
+                        ]
+                      }
+                    ]
+                  },
+                  "amount": {
+                    "maxLength": 18,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "from",
+                    "to",
+                    "amount",
+                    "convertedAmount",
+                    "belowDisplayPrecision",
+                    "quote",
+                    "calculationVersion",
+                    "calculationPrecision",
+                    "rounding",
+                    "decimalPlaces"
+                  ],
+                  "properties": {
+                    "from": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "KRW"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "MMK"
+                          ]
+                        }
+                      ]
+                    },
+                    "to": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "KRW"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "MMK"
+                          ]
+                        }
+                      ]
+                    },
+                    "amount": {
+                      "type": "string"
+                    },
+                    "convertedAmount": {
+                      "type": "string"
+                    },
+                    "belowDisplayPrecision": {
+                      "type": "boolean"
+                    },
+                    "quote": {
+                      "type": "object",
+                      "required": [
+                        "quoteId",
+                        "provider",
+                        "sourceName",
+                        "sourceUrl",
+                        "rateType",
+                        "sourceTimeZone",
+                        "publicationDate",
+                        "publishedAt",
+                        "publicationPrecision",
+                        "retrievedAt",
+                        "expiresAt",
+                        "freshness",
+                        "quotedKrw",
+                        "mmkPer100Krw",
+                        "mmkPerKrw",
+                        "referenceMmkPer100Krw",
+                        "referenceMmkPerKrw",
+                        "referenceSourceUrl",
+                        "krwPerQuotedUnit",
+                        "mmkUnit",
+                        "krwPerMmk",
+                        "rateDisplayDecimalPlaces"
+                      ],
+                      "properties": {
+                        "quoteId": {
+                          "type": "string"
+                        },
+                        "provider": {
+                          "type": "string",
+                          "enum": [
+                            "cbm"
+                          ]
+                        },
+                        "sourceName": {
+                          "type": "string"
+                        },
+                        "sourceUrl": {
+                          "type": "string"
+                        },
+                        "rateType": {
+                          "type": "string",
+                          "enum": [
+                            "MARKET_TRADING"
+                          ]
+                        },
+                        "sourceTimeZone": {
+                          "type": "string",
+                          "enum": [
+                            "Asia/Yangon"
+                          ]
+                        },
+                        "publicationDate": {
+                          "type": "string"
+                        },
+                        "publishedAt": {
+                          "type": "object",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        "publicationPrecision": {
+                          "type": "string",
+                          "enum": [
+                            "DATE"
+                          ]
+                        },
+                        "retrievedAt": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string"
+                        },
+                        "freshness": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "PUBLISHED_TODAY"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "PREVIOUS_PUBLISHED_RATE"
+                              ]
+                            }
+                          ]
+                        },
+                        "quotedKrw": {
+                          "type": "string",
+                          "enum": [
+                            "100"
+                          ]
+                        },
+                        "mmkPer100Krw": {
+                          "type": "string"
+                        },
+                        "mmkPerKrw": {
+                          "type": "string"
+                        },
+                        "referenceMmkPer100Krw": {
+                          "type": "string"
+                        },
+                        "referenceMmkPerKrw": {
+                          "type": "string"
+                        },
+                        "referenceSourceUrl": {
+                          "type": "string"
+                        },
+                        "krwPerQuotedUnit": {
+                          "type": "string",
+                          "enum": [
+                            "100"
+                          ]
+                        },
+                        "mmkUnit": {
+                          "type": "string"
+                        },
+                        "krwPerMmk": {
+                          "type": "string"
+                        },
+                        "rateDisplayDecimalPlaces": {
+                          "type": "number",
+                          "enum": [
+                            14
+                          ]
+                        }
+                      }
+                    },
+                    "calculationVersion": {
+                      "type": "string",
+                      "enum": [
+                        "krw-mmk-cbm-market-1"
+                      ]
+                    },
+                    "calculationPrecision": {
+                      "type": "number",
+                      "enum": [
+                        80
+                      ]
+                    },
+                    "rounding": {
+                      "type": "string",
+                      "enum": [
+                        "FLOOR_ONCE"
+                      ]
+                    },
+                    "decimalPlaces": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "enum": [
+                            0
+                          ]
+                        },
+                        {
+                          "type": "number",
+                          "enum": [
+                            2
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "issues"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "field",
+                          "code"
+                        ],
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "servers": [
