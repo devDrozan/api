@@ -1,0 +1,32 @@
+# Closed-testing service only. Deploy from the API repository, not the workspace root.
+services:
+  - type: web
+    name: e9-mate-calculation-api
+    runtime: docker
+    repo: https://github.com/devDrozan/api
+    branch: codex/v1-ui-redesign
+    region: singapore
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: "10000"
+      # Native Android requests do not need browser CORS origins.
+      # Add the exact web origin separately if deploying the web client.
+      - key: ALLOWED_ORIGINS
+        value: ""
+      # Do not trust arbitrary forwarded IP headers. Until provider proxy
+      # ranges are verified, rate limiting remains conservative/shared.
+      - key: TRUSTED_PROXIES
+        value: ""
+      - key: EXCHANGE_RATE_PROVIDER
+        value: auto
+      - key: EXCHANGE_RATE_ACCESS_APPROVED
+        value: "false"

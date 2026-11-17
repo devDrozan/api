@@ -1,3 +1,4 @@
+import { configuredRemoteConfig, RemoteConfigSchema } from './remote-config.js';
 import Fastify, { type FastifyError } from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
@@ -11,6 +12,7 @@ import { RULES } from './rules.js';
 import { CbmError, CbmQuoteSchema, CbmConversionSchema, createCbmService, convertCbm, type CbmQuote } from './cbm.js';
 
 export async function buildServer(options: { exchange?: { quote: (refresh?: boolean) => Promise<Quote> }; cbm?: { quote: (refresh?: boolean) => Promise<CbmQuote> }; now?: () => Date } = {}) {
+  const remoteConfig = configuredRemoteConfig();
   const exchange = options.exchange ?? configuredRateService();
   const cbm = options.cbm ?? createCbmService({ now: options.now });
   const trustedProxies = (process.env.TRUSTED_PROXIES ?? '').split(',').map(value => value.trim()).filter(Boolean);
@@ -46,6 +48,7 @@ export async function buildServer(options: { exchange?: { quote: (refresh?: bool
     return reply.code(failure.statusCode && failure.statusCode < 500 ? failure.statusCode : 500).send({ code: 'REQUEST_FAILED', message: 'The request could not be completed.', issues: [] });
   });
   server.get('/health', { schema: { operationId: 'health' } }, async () => ({ status: 'ok', service: 'e9-severance-api' }));
+  server.get('/v1/mobile-config', { schema: { operationId: 'getMobileConfig', response: { 200: RemoteConfigSchema } } }, async () => remoteConfig);
   server.get('/v1/rules', { schema: { operationId: 'getRules', response: { 200: RulesResponse } } }, async () => RULES);
   server.post<{ Body: ContextRequest }>('/v1/calculations/context', { schema: { operationId: 'getCalculationContext', body: ContextInput, response: { 200: ContextResponse, 400: ErrorResponse } } }, async request => getContext(request.body));
   server.post<{ Body: CalculationRequest }>('/v1/calculations', { schema: { operationId: 'calculate', body: CalculationInput, response: { 200: CalculationResponse, 400: ErrorResponse } } }, async request => calculate(request.body));

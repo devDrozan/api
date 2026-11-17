@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "revision": "blue-brand-example-1",
+  "theme": {
+    "light": {
+      "background": "#F4F8FF",
+      "surface": "#FFFFFF",
+      "surfaceSubtle": "#EAF2FF",
+      "text": "#102445",
+      "muted": "#4E627F",
+      "border": "#7187A6",
+      "divider": "#DCE6F5",
+      "primary": "#1264D8",
+      "onPrimary": "#FFFFFF",
+      "accent": "#FFCA28",
+      "onAccent": "#102445",
+      "brandBackground": "#1264D8",
+      "brandText": "#FFFFFF",
+      "secondary": "#EAF2FF",
+      "secondaryBorder": "#7187A6",
+      "selected": "#DFEBFF",
+      "selectedBorder": "#1264D8",
+      "link": "#1257B4",
+      "placeholder": "#4E627F",
+      "error": "#AF2432",
+      "errorBackground": "#FFF0F1",
+      "errorBorder": "#BF5260",
+      "resultBackground": "#1264D8",
+      "resultText": "#FFFFFF",
+      "resultMuted": "#FFFFFF",
+      "resultWarning": "#FFFFFF",
+      "switchOn": "#1264D8",
+      "switchOff": "#667B99"
+    },
+    "dark": {
+      "background": "#0B1425",
+      "surface": "#13233B",
+      "surfaceSubtle": "#192D4B",
+      "text": "#F4F8FF",
+      "muted": "#B5C6DF",
+      "border": "#627D9F",
+      "divider": "#2B4260",
+      "primary": "#8DBBFF",
+      "onPrimary": "#0B1425",
+      "accent": "#FFCA28",
+      "onAccent": "#102445",
+      "brandBackground": "#153F79",
+      "brandText": "#F4F8FF",
+      "secondary": "#192D4B",
+      "secondaryBorder": "#627D9F",
+      "selected": "#203C63",
+      "selectedBorder": "#8DBBFF",
+      "link": "#A7CCFF",
+      "placeholder": "#B5C6DF",
+      "error": "#FFB4BD",
+      "errorBackground": "#3E202D",
+      "errorBorder": "#C87888",
+      "resultBackground": "#153F79",
+      "resultText": "#F4F8FF",
+      "resultMuted": "#DFEBFF",
+      "resultWarning": "#FFE18A",
+      "switchOn": "#8DBBFF",
+      "switchOff": "#7388A5"
+    }
+  },
+  "carousel": [
+    {
+      "id": "insurance-information",
+      "label": {
+        "en": "Useful information",
+        "my": "အသုံးဝင်သော အချက်အလက်"
+      },
+      "title": {
+        "en": "E-9 insurance",
+        "my": "E-9 အာမခံ"
+      },
+      "body": {
+        "en": "Read the existing insurance guide.",
+        "my": "အာမခံဆိုင်ရာ လမ်းညွှန်ကို ဖတ်ရှုပါ။"
+      },
+      "action": {
+        "en": "Learn more",
+        "my": "ပိုမိုလေ့လာရန်"
+      },
+      "route": "/insurance",
+      "color": "#1264D8",
+      "art": "insurance"
+    }
+  ],
+  "notices": [
+    {
+      "id": "example-notice",
+      "title": {
+        "en": "Example notice",
+        "my": "နမူနာ အသိပေးချက်"
+      },
+      "body": {
+        "en": "Replace this example before using the configuration.",
+        "my": "ဤနမူနာကို အသုံးမပြုမီ ပြင်ဆင်ပါ။"
+      }
+    }
+  ],
+  "features": {
+    "carouselVisible": true,
+    "carouselAutoplay": true,
+    "carouselIntervalMs": 4000,
+    "noticesVisible": true
+  }
+}
