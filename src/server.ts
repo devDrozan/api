@@ -10,6 +10,7 @@ import { ConversionInput, ConversionResponse, ExchangeQuote, ExchangeError, conf
 import { Type } from '@sinclair/typebox';
 import { RULES } from './rules.js';
 import { CbmError, CbmQuoteSchema, CbmConversionSchema, createCbmService, convertCbm, type CbmQuote } from './cbm.js';
+import { getRemittanceRate } from './remittance.js';
 
 export async function buildServer(options: { exchange?: { quote: (refresh?: boolean) => Promise<Quote> }; cbm?: { quote: (refresh?: boolean) => Promise<CbmQuote> }; now?: () => Date } = {}) {
   const remoteConfig = configuredRemoteConfig();
@@ -47,6 +48,25 @@ export async function buildServer(options: { exchange?: { quote: (refresh?: bool
     if (failure.statusCode === 429) return reply.code(429).send({ code: 'RATE_LIMITED', message: 'Please try again shortly.', issues: [] });
     return reply.code(failure.statusCode && failure.statusCode < 500 ? failure.statusCode : 500).send({ code: 'REQUEST_FAILED', message: 'The request could not be completed.', issues: [] });
   });
+  server.get('/v1/remittance-rates/krw-mmk', async (_request, reply) => {
+  try {
+    const rate = await getRemittanceRate();
+
+    if (!rate) {
+      return reply.code(404).send({
+        code: 'RATE_NOT_AVAILABLE',
+        message: 'No remittance rate available',
+      });
+    }
+
+    return rate;
+  } catch {
+    return reply.code(503).send({
+      code: 'RATE_UNAVAILABLE',
+      message: 'Remittance rate is temporarily unavailable',
+    });
+  }
+});
   server.get('/health', { schema: { operationId: 'health' } }, async () => ({ status: 'ok', service: 'e9-severance-api' }));
   server.get('/v1/mobile-config', { schema: { operationId: 'getMobileConfig', response: { 200: RemoteConfigSchema } } }, async () => remoteConfig);
   server.get('/v1/rules', { schema: { operationId: 'getRules', response: { 200: RulesResponse } } }, async () => RULES);
