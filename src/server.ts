@@ -1,3 +1,4 @@
+import { AdminError, ContentSchema, createAdminStore, registerAdmin, validatePayload, type AdminStore, type Content, type Remittance } from './admin.js';
 import { configuredRemoteConfig, RemoteConfigSchema } from './remote-config.js';
 import Fastify, { type FastifyError } from 'fastify';
 import cors from '@fastify/cors';
@@ -12,8 +13,15 @@ import { RULES } from './rules.js';
 import { CbmError, CbmQuoteSchema, CbmConversionSchema, createCbmService, convertCbm, type CbmQuote } from './cbm.js';
 import { getRemittanceRate } from './remittance.js';
 
-export async function buildServer(options: { exchange?: { quote: (refresh?: boolean) => Promise<Quote> }; cbm?: { quote: (refresh?: boolean) => Promise<CbmQuote> }; now?: () => Date } = {}) {
+export async function buildServer(options: { exchange?: { quote: (refresh?: boolean) => Promise<Quote> }; cbm?: { quote: (refresh?: boolean) => Promise<CbmQuote> }; now?: () => Date; admin?: AdminStore } = {}) {
   const remoteConfig = configuredRemoteConfig();
+  const admin = options.admin ?? ((process.env.ADMIN_ENABLED === 'true' || process.env.ADMIN_PUBLIC_CONTENT_ENABLED === 'true') ? createAdminStore() : undefined);
+  const published = async (kind: 'content' | 'remittance') => {
+    if (process.env.ADMIN_PUBLIC_CONTENT_ENABLED !== 'true' || !admin) return null;
+    const value = admin.readPublished ? await admin.readPublished(kind) : (await admin.read(kind)).published;
+    if (value) validatePayload(kind, value);
+    return value;
+  };
   const exchange = options.exchange ?? configuredRateService();
   const cbm = options.cbm ?? createCbmService({ now: options.now });
   const trustedProxies = (process.env.TRUSTED_PROXIES ?? '').split(',').map(value => value.trim()).filter(Boolean);
@@ -21,13 +29,14 @@ export async function buildServer(options: { exchange?: { quote: (refresh?: bool
   const origins = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173,http://127.0.0.1:5173,http://localhost:8081,http://127.0.0.1:8081').split(',').map(v => v.trim()).filter(Boolean);
   await server.register(cors, { origin: origins, methods: ['GET', 'POST'], credentials: false });
   await server.register(rateLimit, { max: 100, timeWindow: '1 minute' });
-  await server.register(swagger, { openapi: { openapi: '3.0.3', info: { title: 'ထွယ်ဂျီဂွမ်Caculator API', version: '1.0.0' }, servers: [{ url: 'http://127.0.0.1:3001' }] } });
+  await server.register(swagger, { openapi: { openapi: '3.0.3', components: { securitySchemes: { adminBearer: { type: 'http', scheme: 'bearer' } } }, info: { title: 'ထွယ်ဂျီဂွမ်Caculator API', version: '1.0.0' }, servers: [{ url: 'http://127.0.0.1:3001' }] } });
   server.addHook('onSend', async (_request, reply, payload) => {
     reply.header('Cache-Control', 'no-store');
     reply.header('X-Content-Type-Options', 'nosniff');
     return payload;
   });
   server.setErrorHandler((error, _request, reply) => {
+    if (error instanceof AdminError) return reply.code(error.statusCode).send({ code: error.code, message: 'The admin request could not be completed.', issues: error.field ? [{ field: error.field, code: error.code }] : [] });
     if (error instanceof CbmError) {
       const code = ['CBM_STALE_PUBLICATION'].includes(error.code) ? 'RATE_EXPIRED' : ['CBM_RATE_LIMITED', 'CBM_RETRY_LATER'].includes(error.code) ? 'RATE_LIMITED' : error.code === 'CBM_TIMEOUT' ? 'TIMEOUT' : ['CBM_NETWORK_ERROR', 'CBM_HTTP_ERROR'].includes(error.code) ? 'RATE_UNAVAILABLE' : 'UPSTREAM_INVALID_RESPONSE';
       if (code === 'RATE_LIMITED') reply.header('Retry-After', String(Math.ceil(error.retryAfterMs / 1000)));
@@ -50,7 +59,7 @@ export async function buildServer(options: { exchange?: { quote: (refresh?: bool
   });
   server.get('/v1/remittance-rates/krw-mmk', async (_request, reply) => {
   try {
-    const rate = await getRemittanceRate();
+    const rate = (await published('remittance') as Remittance | null) ?? await getRemittanceRate();
 
     if (!rate) {
       return reply.code(404).send({
@@ -67,8 +76,17 @@ export async function buildServer(options: { exchange?: { quote: (refresh?: bool
     });
   }
 });
+  await registerAdmin(server, admin);
   server.get('/health', { schema: { operationId: 'health' } }, async () => ({ status: 'ok', service: 'e9-severance-api' }));
-  server.get('/v1/mobile-config', { schema: { operationId: 'getMobileConfig', response: { 200: RemoteConfigSchema } } }, async () => remoteConfig);
+  server.get('/v1/mobile-config', { schema: { operationId: 'getMobileConfig', response: { 200: RemoteConfigSchema } } }, async () => {
+    try { return (await published('content') as Content | null)?.config ?? remoteConfig; } catch { return remoteConfig; }
+  });
+  server.get('/v1/app-content', { schema: { operationId: 'getAppContent', response: { 200: ContentSchema } } }, async () => {
+    try {
+      const value = await published('content') as Content | null;
+      return { config: value?.config ?? remoteConfig, banners: (value?.banners ?? []).filter(b => b.visible).sort((a, b) => a.order - b.order || a.id.localeCompare(b.id)) };
+    } catch { return { config: remoteConfig, banners: [] }; }
+  });
   server.get('/v1/rules', { schema: { operationId: 'getRules', response: { 200: RulesResponse } } }, async () => RULES);
   server.post<{ Body: ContextRequest }>('/v1/calculations/context', { schema: { operationId: 'getCalculationContext', body: ContextInput, response: { 200: ContextResponse, 400: ErrorResponse } } }, async request => getContext(request.body));
   server.post<{ Body: CalculationRequest }>('/v1/calculations', { schema: { operationId: 'calculate', body: CalculationInput, response: { 200: CalculationResponse, 400: ErrorResponse } } }, async request => calculate(request.body));

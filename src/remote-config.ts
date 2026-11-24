@@ -53,7 +53,8 @@ export const defaultRemoteConfig: RemoteConfig = {
   features: { carouselVisible: true, carouselAutoplay: true, carouselIntervalMs: 4000, noticesVisible: true },
 };
 // Public presentation data only. Read at startup; Render environment changes
-// require a restart/deploy approved by the owner. No database or admin endpoint.
+// require a restart/deploy approved by the owner. Admin publication is a separately
+// gated projection in server.ts and preserves this schema-1 environment fallback.
 export function configuredRemoteConfig(raw = process.env.REMOTE_CONFIG_JSON): RemoteConfig {
   if (!raw || Buffer.byteLength(raw) > 32768) return structuredClone(defaultRemoteConfig);
   try {
